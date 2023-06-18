@@ -3,9 +3,19 @@ import { useRef } from "react";
 import "../styles/Main.css";
 // link
 import { Link } from "react-router-dom";
+// redux store
+import { useDispatch } from "react-redux";
+// slices
+import { SetUser } from "../redux/slices/quizSlice";
 
 const Main = () => {
   const inputRef = useRef("");
+  const dispatch = useDispatch();
+
+  const setName = () => {
+    dispatch(SetUser(inputRef.current.value));
+  } 
+
   return (
     <div className="container">
       <h1 className="title text-light">Quiz Application</h1>
@@ -24,7 +34,7 @@ const Main = () => {
       </form>
 
       <div className="start">
-        <Link className="btn" to="quiz">Start Quiz</Link>
+        <Link className="btn" to="quiz" onClick={() => setName()}>Start Quiz</Link>
       </div>
     </div>
   );

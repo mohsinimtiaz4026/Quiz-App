@@ -1,14 +1,14 @@
-import { useState } from "react";
-// data
-import data from "../database/data";
+// redux
+import { useSelector } from "react-redux";
 
-const Questions = () => {
-  const [checked, setChecked] = useState(undefined);
-  const onSelect = () => {
-    console.log("radio changed");
+const Questions = ({ onChecked }) => {
+  const onSelect = (i) => {
+    onChecked(i);
   };
-  const question = data[0];
-  console.log(question.options)
+  const questionIndex = useSelector(state => state.quiz.trace);
+  const state = useSelector(state => state.quiz.queue);
+  const question = state[questionIndex];
+  const {result,trace} = useSelector(state => state.quiz);
   return (
     <div className="questions">
       <div className="text-light">{question.question}</div>
@@ -21,12 +21,12 @@ const Questions = () => {
               name="options"
               value={false}
               id={`q${i}-option`}
-              onChange={onSelect()}
+              onChange={() => onSelect(i)}
             />
             <label className="text-primary" htmlFor={`q${i}-option`}>
               {q}
             </label>
-            <div className="check"></div>
+            <div className={`check ${result[trace] === i ? 'checked' : ''} `}></div>
           </li>
         ))}
       </ul>

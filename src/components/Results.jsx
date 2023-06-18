@@ -1,12 +1,28 @@
 // styles
 import "../styles/Result.css";
 // link
-import { Link } from "react-router-dom";
+import { Link,Navigate } from "react-router-dom";
+// redux store
+import { useSelector,useDispatch } from "react-redux";
+// slices
+import { ResetAllState } from "../redux/slices/quizSlice";
+// helper
+import { attempt_question,totalEarnPoints,flagResult } from "../helper/calcResult";
 
 const Results = () => {
+  const dispatch = useDispatch();
   const onRestart = () => {
-    console.log("Restart button clicked");
+    dispatch(ResetAllState());
+    <Navigate to="/" replace="true"/>
   }
+  const { queue,answer,result,trace,userId } = useSelector(state => state.quiz);
+  const totalPoints = queue.length * 10;
+  const totalQuestions = queue.length; 
+  const attempt = attempt_question(result);
+  const earnPoints = totalEarnPoints(result,answer);
+  const flag = flagResult(totalPoints,earnPoints);
+  
+  
     return (
       <div className="container">
         <h1 className="title text-light">Quiz Application</h1>
@@ -14,27 +30,29 @@ const Results = () => {
         <div className="result flex-center">
           <div className="flex">
             <span>Username</span>
-            <span className="bold">Raj Chaudhary</span>
+            <span className="bold">{userId}</span>
           </div>
           <div className="flex">
             <span>Total Quiz Points :</span>
-            <span className="bold">50</span>
+            <span className="bold">{totalPoints}</span>
           </div>
           <div className="flex">
             <span>Total Questions :</span>
-            <span className="bold">05</span>
+            <span className="bold">{totalQuestions}</span>
           </div>
           <div className="flex">
             <span>Total Attempt Questions :</span>
-            <span className="bold">03</span>
+            <span className="bold">{attempt}</span>
           </div>
           <div className="flex">
             <span>Total Earn Points :</span>
-            <span className="bold">30</span>
+            <span className="bold">{earnPoints}</span>
           </div>
           <div className="flex">
             <span>Quiz Result :</span>
-            <span className="bold">Passed</span>
+            <span className="bold" style={{
+              color: flag ? "green" : "red"
+            }}>{flag ? "Passed" : "Failed"}</span>
           </div>
         </div>
         <div className="start">
