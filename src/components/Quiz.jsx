@@ -7,24 +7,41 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   QuestionTraceIncrement,
   QuestionTraceDecrement,
-  ExamAnswerResultPush,
+  PushUserAnswer,
 } from "../redux/slices/quizSlice";
 // react-router-dom
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Quiz = () => {
+  function generateRandomArray() {
+    var numbers = [];
+  
+    while (numbers.length < 5) {
+      var randomNumber = Math.floor(Math.random() * 11); // Generate a random number between 0 and 10
+  
+      if (!numbers.includes(randomNumber)) {
+        numbers.push(randomNumber);
+      }
+    }
+  
+    return numbers;
+  }
+  
+  var randomArray = generateRandomArray();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { result,queue,trace } = useSelector((state) => state.quiz);
-  const [check, setCheck] = useState(undefined);
+  const { queue, trace } = useSelector((state) => state.quiz);
+  const [check, setCheck] = useState(null);
   const onPrevious = () => {
     dispatch(QuestionTraceDecrement());
   };
   const onNext = () => {
-    if (result.length && result.length >= queue.length) {
-      return <Navigate to={"/result"} replace="true"></Navigate>;
+    if (trace == queue.length - 1) {
+      dispatch(PushUserAnswer(trace,check));
+      navigate("/result");
     } else {
       dispatch(QuestionTraceIncrement());
-      dispatch(ExamAnswerResultPush(check));
+      dispatch(PushUserAnswer(trace,check));
     }
   };
   const onChecked = (check) => {

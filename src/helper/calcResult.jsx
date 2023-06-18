@@ -1,9 +1,22 @@
-export const attempt_question = (result) => {
-  return result.filter((r) => r !== r.undefined).length;
+export const attempt_question = (queue) => {
+  let total = 0;
+  queue.map((item,index) => {
+    console.log(item)
+    if(item.userAnswer !== null){
+      total = total+1;
+    }
+  })
+  return total;
 };
-export const totalEarnPoints = (result, answer) => {
-  return result.map((e, i) => answer[i] == e).filter(i => i).map(i => 10).reduce((prev,curr) => prev+curr,0);
+export const totalEarnPoints = (queue) => {
+  let total = 0;
+  queue.map((item,index) => {
+    if(item.originalAnswer == item.userAnswer){
+      total = total+1;
+    }
+  })
+  return total*10;
 };
-export const flagResult = (totalPoints,earnPoints) => {
-  return (totalPoints * 50 / 100) < earnPoints;
+export const flagResult = (earnPoints,totalPoints) => {
+  return (earnPoints / totalPoints * 100);
 }

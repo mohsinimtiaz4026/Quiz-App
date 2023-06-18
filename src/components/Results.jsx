@@ -15,12 +15,12 @@ const Results = () => {
     dispatch(ResetAllState());
     <Navigate to="/" replace="true"/>
   }
-  const { queue,answer,result,trace,userId } = useSelector(state => state.quiz);
+  const { queue,trace,userId } = useSelector(state => state.quiz);
   const totalPoints = queue.length * 10;
   const totalQuestions = queue.length; 
-  const attempt = attempt_question(result);
-  const earnPoints = totalEarnPoints(result,answer);
-  const flag = flagResult(totalPoints,earnPoints);
+  const attempt = attempt_question(queue);
+  const earnPoints = totalEarnPoints(queue);
+  const flag = flagResult(earnPoints,totalPoints);
   
   
     return (
